@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{bf9ff925-52ca-44ba-be1c-80270fd0e9f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\title">
+      <UniqueIdentifier>{097a482a-b381-46d1-8b1c-639b79229030}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -26,5 +32,33 @@
     <ClInclude Include="AtlasParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title.atlas">
+      <Filter>Assets\title</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title.jpg">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title.png">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title2.png">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title3.png">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title4.png">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title5.png">
+      <Filter>Assets\title</Filter>
+    </Image>
+    <Image Include="..\..\..\..\OneDrive\Desktop\desktop\stsAssets\title\title6.png">
+      <Filter>Assets\title</Filter>
+    </Image>
   </ItemGroup>
 </Project>

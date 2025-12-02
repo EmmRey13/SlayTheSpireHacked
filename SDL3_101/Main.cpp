@@ -7,17 +7,20 @@
 const int SC_WIDTH = 1080;
 const int SC_HEIGHT = 920;
 
-struct Pane {
+struct Pane 
+{
 	SDL_Window* window;
 	SDL_Renderer* renderer;	
 };
 
-void close(Pane &p) {
+void close(Pane &p) 
+{
 	SDL_DestroyWindow(p.window);
 	SDL_Quit();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) 
+{
 
 	SDL_Init(SDL_INIT_AUDIO);
 	SDL_Init(SDL_INIT_VIDEO);

@@ -1,15 +1,39 @@
 #pragma once
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <fstream>
-#include <sstream>
 #include <string>
-#include <unordered_map>
-#include <iostream>
+#include <vector>
+#include <SDL3/SDL.h>
 
-class AtlasParse
-{
+using namespace std;
 
-		
+struct AtlasRegion {
+    string name;
+    int x, y;
+    int width, height;
+    bool rotated;
+
+    int origHeight;
+    int origWidth;
+    int offsetX;
+    int offsetY;
+
+    int index;
 };
 
+struct AtlasPage {
+    string textureFile;
+    SDL_Texture* texture;
+    vector<AtlasRegion> regions;
+
+    AtlasRegion* findRegion(const string& name);
+};
+
+class Atlas {
+public:
+    vector<AtlasPage> pages;
+
+    bool load(const string& path, SDL_Renderer* renderer);
+
+    AtlasRegion* findRegion(const string& name, AtlasPage** pageOut = nullptr);
+
+    
+};
