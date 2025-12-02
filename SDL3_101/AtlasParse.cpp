@@ -56,7 +56,13 @@ bool Atlas::load(const string& path, SDL_Renderer* renderer) {
             continue;
         }
 
-        if (hasIndent && !cleanLine.empty() && cleanLine.find(':') == string::npos) {\
+        if (hasIndent && !cleanLine.empty() && cleanLine.find(':') == string::npos) {
+
+            if (!currentPage) {
+                SDL_Log("Atlas parse error: region found before any page");
+                continue;
+            }
+
             currentPage->regions.push_back({});
             currentRegion = &currentPage->regions.back();
             currentRegion->name = cleanLine;
@@ -95,4 +101,37 @@ bool Atlas::load(const string& path, SDL_Renderer* renderer) {
         }
 
     }
+
+    for (auto& page : pages) {
+        string fileDir = atlasDir + page.textureFile;
+
+        SDL_Surface* surf = IMG_Load(fileDir.c_str());
+        
+        if (!surf) {
+            SDL_Log("some textures failed to load");
+            return false;
+        }
+
+        page.texture = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_DestroySurface(surf);
+
+        if (!page.texture) {
+            SDL_Log("Failed to create texture from: %s", fileDir.c_str());
+            return false;
+        }
+
+    } 
+    return true;
+}
+
+AtlasRegion* Atlas::findRegion(const string& name, AtlasPage** pageOut) {
+    for (auto& page : pages) {
+        for (auto& region : page.regions) {
+            if (region.name == name) {
+                if (pageOut) *pageOut = &page;
+                return &region;
+            }
+        }
+    }
+    return nullptr;
 }

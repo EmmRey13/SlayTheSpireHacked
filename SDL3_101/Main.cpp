@@ -21,14 +21,10 @@ void close(Pane &p)
 
 int main(int argc, char* argv[]) 
 {
-
-	SDL_Init(SDL_INIT_AUDIO);
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Init(SDL_INIT_SENSOR);
-	SDL_Init(SDL_INIT_EVENTS);
-	SDL_Init(SDL_INIT_CAMERA);
 
 	Pane pane;
+	Atlas atlas;
 
 	pane.window = SDL_CreateWindow("title", SC_WIDTH, SC_HEIGHT, 0);
 	pane.renderer = SDL_CreateRenderer(pane.window, NULL);
@@ -49,21 +45,7 @@ int main(int argc, char* argv[])
 	bool go = true;
 	while (go == true) {
 
-		//SDL_RenderPresent(pane.renderer);
-
-		SDL_Event event{ 0 };
-
-		while (SDL_PollEvent(&event)) {
-
-			switch (event.type) {
-				
-				case SDL_EVENT_QUIT:
-					go = false;
-					break;
-			}
-		}
-		
-		//SDL_RenderClear(pane.renderer);
+	
 
 	}
 
