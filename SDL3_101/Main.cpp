@@ -7,28 +7,21 @@
 const int SC_WIDTH = 1080;
 const int SC_HEIGHT = 920;
 
-struct Pane 
-{
+struct Pane {
 	SDL_Window* window;
 	SDL_Renderer* renderer;	
 };
 
-void close(Pane &p) 
-{
+void close(Pane &p) {
 	SDL_DestroyWindow(p.window);
 	SDL_Quit();
 }
 
-int main(int argc, char* argv[]) 
-{
-
-	SDL_Init(SDL_INIT_AUDIO);
+int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Init(SDL_INIT_SENSOR);
-	SDL_Init(SDL_INIT_EVENTS);
-	SDL_Init(SDL_INIT_CAMERA);
 
 	Pane pane;
+	Atlas atlas;
 
 	pane.window = SDL_CreateWindow("title", SC_WIDTH, SC_HEIGHT, 0);
 	pane.renderer = SDL_CreateRenderer(pane.window, NULL);
@@ -42,33 +35,51 @@ int main(int argc, char* argv[])
 
 	if (!pane.renderer) {
 		close(pane);
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Renderer not created",pane.window);
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Renderer not created", pane.window);
 		return 1;
 	}
 
+	atlas.load("assets/title.atls", pane.renderer);
+
+	float camX = 0.0f;
+	float camY = 0.0f;
+
 	bool go = true;
+
 	while (go == true) {
 
-		//SDL_RenderPresent(pane.renderer);
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_EVENT_QUIT)
+				go = false;
 
-		SDL_Event event{ 0 };
-
-		while (SDL_PollEvent(&event)) {
-
-			switch (event.type) {
-				
-				case SDL_EVENT_QUIT:
+			if (e.type == SDL_EVENT_KEY_DOWN) {
+				switch (e.key.key) {
+				case SDLK_ESCAPE:
 					go = false;
 					break;
+
+				case SDLK_LEFT:
+					camX -= 10;
+					break;
+				case SDLK_RIGHT:
+					camX += 10;
+					break;
+				case SDLK_UP:
+					camY -= 10;
+					break;
+				case SDLK_DOWN:
+					camY += 10;
+					break;
+				}
 			}
+
+
 		}
-		
-		//SDL_RenderClear(pane.renderer);
 
+
+		close(pane);
+
+		return 0;
 	}
-
-	close(pane);
-
-	return 0;
 }
-

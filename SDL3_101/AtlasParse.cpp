@@ -56,7 +56,13 @@ bool Atlas::load(const string& path, SDL_Renderer* renderer) {
             continue;
         }
 
-        if (hasIndent && !cleanLine.empty() && cleanLine.find(':') == string::npos) {\
+        if (hasIndent && !cleanLine.empty() && cleanLine.find(':') == string::npos) {
+
+            if (!currentPage) {
+                SDL_Log("Atlas parse error: region found before any page");
+                continue;
+            }
+
             currentPage->regions.push_back({});
             currentRegion = &currentPage->regions.back();
             currentRegion->name = cleanLine;
@@ -94,5 +100,70 @@ bool Atlas::load(const string& path, SDL_Renderer* renderer) {
             }
         }
 
+    }
+
+    for (auto& page : pages) {
+        string fileDir = atlasDir + page.textureFile;
+
+        SDL_Surface* surf = IMG_Load(fileDir.c_str());
+        
+        if (!surf) {
+            SDL_Log("some textures failed to load");
+            return false;
+        }
+
+        page.texture = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_DestroySurface(surf);
+
+        if (!page.texture) {
+            SDL_Log("Failed to create texture from: %s", fileDir.c_str());
+            return false;
+        }
+
+    } 
+    return true;
+}
+
+AtlasRegion* Atlas::findRegion(const string& name, AtlasPage** pageOut) {
+    for (auto& page : pages) {
+        for (auto& region : page.regions) {
+            if (region.name == name) {
+                if (pageOut) *pageOut = &page;
+                return &region;
+            }
+        }
+    }
+    return nullptr;
+}
+
+void Atlas::renderAtlasTextures(SDL_Renderer* renderer, Atlas& atlas, float xOffset = 0, float yOffset = 0) {
+    for (auto& page : atlas.pages) {
+        if (!page.texture) continue;
+
+        for (auto& region : page.regions) {
+            SDL_FRect src;
+            src.x = (float)region.x;
+            src.y = (float)region.y;
+            src.w = (float)region.width;
+            src.h = (float)region.height;
+
+            SDL_FRect dst;
+            int origW = (region.origWidth > 0) ? region.origWidth : region.width;
+            int origH = (region.origHeight > 0) ? region.origHeight : region.height;
+            int offX = region.offsetX;
+            int offY = region.offsetY;
+
+            dst.x = xOffset + offX;
+            dst.y = yOffset + offY;
+            dst.w = (float)origW;
+            dst.h = (float)origH;
+
+            if (region.rotated) {
+                SDL_RenderTextureRotated(renderer, page.texture, &src, &dst, 90.0, nullptr, SDL_FLIP_NONE);
+            }
+            else {
+                SDL_RenderTexture(renderer, page.texture, &src, &dst);
+            }
+        }
     }
 }
