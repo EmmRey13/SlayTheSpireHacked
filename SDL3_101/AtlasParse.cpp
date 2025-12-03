@@ -135,3 +135,35 @@ AtlasRegion* Atlas::findRegion(const string& name, AtlasPage** pageOut) {
     }
     return nullptr;
 }
+
+void Atlas::renderAtlasTextures(SDL_Renderer* renderer, Atlas& atlas, float xOffset = 0, float yOffset = 0) {
+    for (auto& page : atlas.pages) {
+        if (!page.texture) continue;
+
+        for (auto& region : page.regions) {
+            SDL_FRect src;
+            src.x = (float)region.x;
+            src.y = (float)region.y;
+            src.w = (float)region.width;
+            src.h = (float)region.height;
+
+            SDL_FRect dst;
+            int origW = (region.origWidth > 0) ? region.origWidth : region.width;
+            int origH = (region.origHeight > 0) ? region.origHeight : region.height;
+            int offX = region.offsetX;
+            int offY = region.offsetY;
+
+            dst.x = xOffset + offX;
+            dst.y = yOffset + offY;
+            dst.w = (float)origW;
+            dst.h = (float)origH;
+
+            if (region.rotated) {
+                SDL_RenderTextureRotated(renderer, page.texture, &src, &dst, 90.0, nullptr, SDL_FLIP_NONE);
+            }
+            else {
+                SDL_RenderTexture(renderer, page.texture, &src, &dst);
+            }
+        }
+    }
+}

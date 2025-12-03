@@ -7,20 +7,17 @@
 const int SC_WIDTH = 1080;
 const int SC_HEIGHT = 920;
 
-struct Pane 
-{
+struct Pane {
 	SDL_Window* window;
 	SDL_Renderer* renderer;	
 };
 
-void close(Pane &p) 
-{
+void close(Pane &p) {
 	SDL_DestroyWindow(p.window);
 	SDL_Quit();
 }
 
-int main(int argc, char* argv[]) 
-{
+int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	Pane pane;
@@ -38,19 +35,51 @@ int main(int argc, char* argv[])
 
 	if (!pane.renderer) {
 		close(pane);
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Renderer not created",pane.window);
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Renderer not created", pane.window);
 		return 1;
 	}
 
+	atlas.load("assets/title.atls", pane.renderer);
+
+	float camX = 0.0f;
+	float camY = 0.0f;
+
 	bool go = true;
+
 	while (go == true) {
 
-	
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_EVENT_QUIT)
+				go = false;
 
+			if (e.type == SDL_EVENT_KEY_DOWN) {
+				switch (e.key.key) {
+				case SDLK_ESCAPE:
+					go = false;
+					break;
+
+				case SDLK_LEFT:
+					camX -= 10;
+					break;
+				case SDLK_RIGHT:
+					camX += 10;
+					break;
+				case SDLK_UP:
+					camY -= 10;
+					break;
+				case SDLK_DOWN:
+					camY += 10;
+					break;
+				}
+			}
+
+
+		}
+
+
+		close(pane);
+
+		return 0;
 	}
-
-	close(pane);
-
-	return 0;
 }
-

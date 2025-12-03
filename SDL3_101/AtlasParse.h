@@ -35,5 +35,7 @@ public:
 
     AtlasRegion* findRegion(const string& name, AtlasPage** pageOut = nullptr);
 
+    static void renderAtlasTextures(SDL_Renderer* renderer, Atlas& atlas, float xOffset = 0, float yOffset = 0);
+
     
 };
